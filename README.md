@@ -108,6 +108,3 @@ real_effects/
 
 ---
 
-## License
-
-This project is provided for educational purposes. Feel free to use, modify, and extend it.

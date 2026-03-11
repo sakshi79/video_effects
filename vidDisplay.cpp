@@ -162,54 +162,50 @@ int main()
             cv::imwrite("current_frame.png", out_frame);
         }
 
+
+        bool needFaces = faceDetect || blurRest || cFace || halo;
+        if(needFaces)
+        {
+            faces.clear();
+            cv::cvtColor(frame, gray_frame, cv::COLOR_BGR2GRAY);
+            detectFaces(gray_frame, faces);
+        }
+
         if(gray && out_frame.channels() == 3)
         {
             out_frame = toGrayscale(out_frame);
-            // cv::imshow("Video Streaming", out_frame);
         }        
         if(sepia)
         {
             Sepia(out_frame, out_frame);
-            // cv::imshow("Video Streaming", out_frame);
         }
         if(blur)
         {
             blur5x5_2(out_frame, out_frame);
-            // cv::imshow("Video Streaming", out_frame);
 
         }
         if(sobelX)
         {
             sobelX3x3(out_frame, sobelX16);
             cv::convertScaleAbs(sobelX16, out_frame);
-            // cv::imshow("Video Streaming", out_frame);
         }
         if(sobelY)
         {
             sobelY3x3(out_frame, sobelY16);
             cv::convertScaleAbs(sobelY16, out_frame);
-            // cv::imshow("Video Streaming", out_frame);
         }
         if(grad_mag)
         {
             sobelX3x3(out_frame, sobelX16);
             sobelY3x3(out_frame, sobelY16);
             magnitude(sobelX16, sobelY16, out_frame);
-            // cv::imshow("Video Streaming", out_frame);
         }
         if(blurQ)
         {
             blurQuantize(out_frame, out_frame, 10);
-            // cv::imshow("Video Streaming", out_frame);
         }
         if(faceDetect)
         {
-            // convert to grayscale
-            cv::cvtColor(out_frame, gray_frame, cv::COLOR_BGR2GRAY);
-            // detect faces
-            faces.clear();
-            detectFaces(gray_frame, faces);
-
             // draw boxes
             drawBoxes(out_frame, faces);
             // cv::imshow("Video Streaming", out_frame);
@@ -227,26 +223,17 @@ int main()
         }
         if(blurRest)
         {
-            cv::cvtColor(out_frame, gray_frame, cv::COLOR_BGR2GRAY);
-            detectFaces(gray_frame, faces);
             blurOutsideFaces(out_frame, out_frame, faces);
             // cv::imshow("Video Streaming", out_frame);
             
         }
         if(cFace)
         {
-            cv::cvtColor(out_frame, gray_frame, cv::COLOR_BGR2GRAY);
-            detectFaces(gray_frame, faces);
             colorFace(out_frame, out_frame, faces);
             // cv::imshow("Video Streaming", out_frame);
         }
         if(halo)
         {
-            // convert to grayscale
-            cv::cvtColor(out_frame, gray_frame, cv::COLOR_BGR2GRAY);
-            // detect faces
-            faces.clear();
-            detectFaces(gray_frame, faces);
             haloSparkles(out_frame, out_frame, faces);
             // cv::imshow("Video Streaming", out_frame);
         }
