@@ -36,14 +36,8 @@ int main()
     // Defining required frame variables
     cv::Mat frame;
     cv::Mat out_frame;
-   
-    cv::Mat sepia_frame;
-    cv::Mat sobelX16, sobelXvis;
-    cv::Mat sobelY16, sobelYvis;
-    cv::Mat magnitudeVis;
-    cv::Mat blurQuantVis;
-    cv::Mat faceDetectVis;
-    cv::Mat embosVis;
+    cv::Mat sobelX16;
+    cv::Mat sobelY16;
     cv::Mat gray_frame;
     std::vector<cv::Rect> faces;
 
@@ -63,12 +57,16 @@ int main()
 
     std::cout << "Press 'q' to quit\n";
     std::cout << "Press 'g' to toggle grayscale. \n";
-    std::cout << "Press 'h' to toggle custom greyscale. \n";
     std::cout << "Press 'p' to toggle sepia filter. \n";
     std::cout << "Press 'b' for 5x5 Gaussian blur filter. \n";
     std::cout << "Press 'x' for SobelX filter. \n";
     std::cout << "Press 'y' for SobelY filter. \n";
     std::cout << "Press 's' to save the current frame\n";
+
+
+    // Creating Display Window
+    cv::namedWindow("Video Streaming", cv::WINDOW_NORMAL | cv::WINDOW_KEEPRATIO);
+    cv::resizeWindow("Video Streaming", 1280, 720);
 
     while (true)
     {
@@ -76,12 +74,9 @@ int main()
         if(frame.empty())
             break;
 
-        //cv::resize(frame, frame, cv::Size(, 1000));
         out_frame = frame.clone();
 
-        //cv::imshow("Video Display Window", out_frame);
-
-        char k = (char)cv::waitKey(30);
+        char k = (char)cv::waitKey(5);
         if(k == 'q')
         {
             break;
@@ -122,30 +117,18 @@ int main()
         if(k=='x')
         {
             sobelX=!sobelX;
-            // sobelX3x3(out_frame, sobelX16);
-            // cv::convertScaleAbs(sobelX16, sobelXvis);
-            // cv::imshow("Sobel X", sobelXvis);
         }
         if(k=='y')
         {
             sobelY=!sobelY;
-            // sobelY3x3(out_frame, sobelY16);
-            // cv::convertScaleAbs(sobelY16, sobelYvis);
-            // cv::imshow("Sobel Y", sobelYvis);
         }
         if(k=='m')
         {
             grad_mag = !grad_mag;
-            // sobelX3x3(out_frame, sobelX16);
-            // sobelY3x3(out_frame, sobelY16);
-            // magnitude(sobelX16, sobelY16, magnitudeVis);
-            // cv::imshow("Gradient Magnitude", magnitudeVis);
         }
         if(k=='l')
         {
             blurQ = !blurQ;
-            // blurQuantize(out_frame, blurQuantVis, 10);
-            // cv::imshow("Blur and Quantize", blurQuantVis);
         }
         if(k=='f')
         {
@@ -176,59 +159,48 @@ int main()
 
         if(k == 's')
         {
-            if(gray)
-            {
-                std::cout << "Saved frame as output_grayframe.png\n";
-            }
-            if(sepia)
-            {
-                Sepia(out_frame, sepia_frame);
-            }
-            else
-            {
-                std::cout << "Saved frame as output_frame.png\n";
-            }
+            cv::imwrite("current_frame.png", out_frame);
         }
 
         if(gray && out_frame.channels() == 3)
         {
             out_frame = toGrayscale(out_frame);
-            cv::imshow("Video Streaming", out_frame);
+            // cv::imshow("Video Streaming", out_frame);
         }        
         if(sepia)
         {
             Sepia(out_frame, out_frame);
-            cv::imshow("Video Streaming", out_frame);
+            // cv::imshow("Video Streaming", out_frame);
         }
         if(blur)
         {
-            blur5x5_2(frame, out_frame);
-            cv::imshow("Video Streaming", out_frame);
+            blur5x5_2(out_frame, out_frame);
+            // cv::imshow("Video Streaming", out_frame);
 
         }
         if(sobelX)
         {
             sobelX3x3(out_frame, sobelX16);
             cv::convertScaleAbs(sobelX16, out_frame);
-            cv::imshow("Video Streaming", out_frame);
+            // cv::imshow("Video Streaming", out_frame);
         }
         if(sobelY)
         {
-            sobelX3x3(out_frame, sobelY16);
+            sobelY3x3(out_frame, sobelY16);
             cv::convertScaleAbs(sobelY16, out_frame);
-            cv::imshow("Video Streaming", out_frame);
+            // cv::imshow("Video Streaming", out_frame);
         }
         if(grad_mag)
         {
             sobelX3x3(out_frame, sobelX16);
             sobelY3x3(out_frame, sobelY16);
             magnitude(sobelX16, sobelY16, out_frame);
-            cv::imshow("Video Streaming", out_frame);
+            // cv::imshow("Video Streaming", out_frame);
         }
         if(blurQ)
         {
             blurQuantize(out_frame, out_frame, 10);
-            cv::imshow("Video Streaming", out_frame);
+            // cv::imshow("Video Streaming", out_frame);
         }
         if(faceDetect)
         {
@@ -240,33 +212,33 @@ int main()
 
             // draw boxes
             drawBoxes(out_frame, faces);
-            cv::imshow("Video Streaming", out_frame);
+            // cv::imshow("Video Streaming", out_frame);
         }
         if(neg)
         {
             negative(out_frame, out_frame);
-            cv::imshow("Video Streaming", out_frame);
+            // cv::imshow("Video Streaming", out_frame);
            
         }
         if(embs)
         {
             emboss(out_frame, out_frame);
-            cv::imshow("Video Streaming", out_frame);
+            // cv::imshow("Video Streaming", out_frame);
         }
         if(blurRest)
         {
-            cv::cvtColor(frame, gray_frame, cv::COLOR_BGR2GRAY);
+            cv::cvtColor(out_frame, gray_frame, cv::COLOR_BGR2GRAY);
             detectFaces(gray_frame, faces);
-            blurOutsideFaces(frame, out_frame, faces);
-            cv::imshow("Video Streaming", out_frame);
+            blurOutsideFaces(out_frame, out_frame, faces);
+            // cv::imshow("Video Streaming", out_frame);
             
         }
         if(cFace)
         {
-            cv::cvtColor(frame, gray_frame, cv::COLOR_BGR2GRAY);
+            cv::cvtColor(out_frame, gray_frame, cv::COLOR_BGR2GRAY);
             detectFaces(gray_frame, faces);
-            colorFace(frame, out_frame, faces);
-            cv::imshow("Video Streaming", out_frame);
+            colorFace(out_frame, out_frame, faces);
+            // cv::imshow("Video Streaming", out_frame);
         }
         if(halo)
         {
@@ -275,15 +247,10 @@ int main()
             // detect faces
             faces.clear();
             detectFaces(gray_frame, faces);
-            haloSparkles(frame, out_frame, faces);
-            cv::imshow("Video Streaming", out_frame);
+            haloSparkles(out_frame, out_frame, faces);
+            // cv::imshow("Video Streaming", out_frame);
         }
-        else
-        {
-            cv::namedWindow("Video Streaming", cv::WINDOW_NORMAL | cv::WINDOW_KEEPRATIO);
-            cv::resizeWindow("Output", 1280, 720);
-            cv::imshow("Video Streaming", out_frame);
-        }
+        cv::imshow("Video Streaming", out_frame);
     }
 
     cap.release();

@@ -8,8 +8,7 @@ A real-time webcam video processing application built with **C++** and **OpenCV*
 
 | Key | Effect |
 |-----|--------|
-| `g` | Grayscale (OpenCV built-in) |
-| `h` | Custom grayscale |
+| `g` | Grayscale |
 | `p` | Sepia tone |
 | `b` | 5×5 Gaussian blur |
 | `x` | Sobel X (horizontal edge detection) |
