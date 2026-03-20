@@ -1,6 +1,6 @@
 # Real-Time Video Effects
 
-A real-time webcam video processing application built with **C++** and **OpenCV**. Apply a variety of image filters and effects to your live camera feed using simple keyboard shortcuts — including face detection, edge detection, artistic filters, and more.
+A real-time webcam video processing application built with **C++** and **OpenCV**. Apply a variety of image filters and effects to your live camera feed using simple keyboard shortcuts. Includes face detection, edge detection, artistic filters, and more. Checkout a web version of the app [here] (https://sakshi79.github.io/faceapp.html).
 
 ---
 
